@@ -1,5 +1,7 @@
+# accounts/urls.py
+
 from django.urls import path
-from accounts.views import RegisterView, LoginView
+from .views import RegisterView, LoginView 
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
