@@ -1,10 +1,10 @@
-# api/urls.py
+# accounts/urls.py
 
 from django.urls import path
-from accounts.views import RegisterView, LoginView, VerifyTokenView
+from .views import RegisterView, LoginView, VerifyTokenView
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', LoginView.as_view(), name='login'),
-    path('verify-token/', VerifyTokenView.as_view(), name='verify-token'),
+    path('verify-token/', VerifyTokenView.as_view(), name='verify_token'),
 ]
