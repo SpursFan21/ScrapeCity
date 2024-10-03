@@ -82,3 +82,54 @@ class VerifyTokenView(View):
             return JsonResponse({"error": "Token is invalid or expired"}, status=401)
         except User.DoesNotExist:
             return JsonResponse({"error": "User does not exist"}, status=404)
+        
+
+@method_decorator(csrf_exempt, name='dispatch')
+class UpdateAccountView(View):
+    def put(self, request):
+    
+        token = request.headers.get('Authorization')
+        
+        if token is None:
+            return JsonResponse({"error": "No token provided"}, status=401)
+        
+        token = token.split(" ")[1] if " " in token else token
+        
+        try:
+            # Validate the token
+            validated_token = JWTAuthentication().get_validated_token(token)
+            
+            # Retrieve user information from the token
+            user_id = validated_token["user_id"]
+            user = User.objects.get(id=user_id)
+            
+            # Get updated data from the request body
+            data = json.loads(request.body)
+            username = data.get('username')
+            email = data.get('email')
+            password = data.get('password')
+
+            # Update user fields if new values are provided
+            if username:
+                user.username = username
+            if email:
+                user.email = email
+            if password:
+                user.set_password(password)
+                
+            user.save()
+
+            return JsonResponse({
+                "message": "User details updated successfully",
+                "user": {
+                    "username": user.username,
+                    "email": user.email,
+                }
+            }, status=200)
+        
+        except TokenError:
+            return JsonResponse({"error": "Token is invalid or expired"}, status=401)
+        except User.DoesNotExist:
+            return JsonResponse({"error": "User does not exist"}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON data"}, status=400)
