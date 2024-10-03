@@ -22,7 +22,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Verify token and set user data
   const verifyToken = async (token: string): Promise<{ valid: boolean; userData?: User }> => {
     try {
-      const response = await axios.post('/api/verify-token/', {}, {
+      const response = await axios.post('http://127.0.0.1:8000/api/verify-token/', {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return { valid: true, userData: response.data.decoded }; // Return user data along with validity
@@ -58,6 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem('accessToken'); // Clear token from local storage
+    localStorage.removeItem('refreshToken'); // Clear refresh token as well
   };
 
   return (
@@ -77,3 +78,4 @@ export const useAuth = () => {
   }
   return context;
 };
+

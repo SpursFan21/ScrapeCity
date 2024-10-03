@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import axios from 'axios';
 import { useNavigate } from '@tanstack/react-router';
+import { useAuth } from '../context/AuthContext';
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
@@ -12,6 +13,7 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { setUser } = useAuth();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -22,17 +24,25 @@ function LoginPage() {
         password,
       });
 
-      console.log(response.data);
-      // Store the token in local storage
-      localStorage.setItem('accessToken', response.data.access);
+      const { access, refresh } = response.data;
+      // Store the tokens in localStorage
+      localStorage.setItem('accessToken', access);
+      localStorage.setItem('refreshToken', refresh);
+
+      // Verify the token and update user data in AuthContext
+      const userResponse = await axios.post('http://127.0.0.1:8000/api/verify-token/', {}, {
+        headers: { Authorization: `Bearer ${access}` },
+      });
+      
+      setUser(userResponse.data.decoded); // Set the user data in AuthContext
 
       // Navigate to the homepage or dashboard after successful login
-      navigate({ to: '/' }); // Update the navigation path as needed
+      navigate({ to: '/' });
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        setError(error.response?.data.error || "Login failed.");
+        setError(error.response?.data.error || 'Login failed.');
       } else {
-        setError("An unexpected error occurred.");
+        setError('An unexpected error occurred.');
       }
     }
   };
