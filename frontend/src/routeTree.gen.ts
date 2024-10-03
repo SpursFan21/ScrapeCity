@@ -12,8 +12,11 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as TestImport } from './routes/test'
+import { Route as ScrapingOrderImport } from './routes/scraping-order'
 import { Route as RegisterImport } from './routes/register'
 import { Route as LoginImport } from './routes/login'
+import { Route as ContactImport } from './routes/contact'
+import { Route as AccountImport } from './routes/account'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 
@@ -24,6 +27,11 @@ const TestRoute = TestImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ScrapingOrderRoute = ScrapingOrderImport.update({
+  path: '/scraping-order',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const RegisterRoute = RegisterImport.update({
   path: '/register',
   getParentRoute: () => rootRoute,
@@ -31,6 +39,16 @@ const RegisterRoute = RegisterImport.update({
 
 const LoginRoute = LoginImport.update({
   path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ContactRoute = ContactImport.update({
+  path: '/contact',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AccountRoute = AccountImport.update({
+  path: '/account',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -62,6 +80,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountImport
+      parentRoute: typeof rootRoute
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -74,6 +106,13 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterImport
+      parentRoute: typeof rootRoute
+    }
+    '/scraping-order': {
+      id: '/scraping-order'
+      path: '/scraping-order'
+      fullPath: '/scraping-order'
+      preLoaderRoute: typeof ScrapingOrderImport
       parentRoute: typeof rootRoute
     }
     '/test': {
@@ -91,16 +130,22 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
+  '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/scraping-order': typeof ScrapingOrderRoute
   '/test': typeof TestRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
+  '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/scraping-order': typeof ScrapingOrderRoute
   '/test': typeof TestRoute
 }
 
@@ -108,33 +153,67 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
+  '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/scraping-order': typeof ScrapingOrderRoute
   '/test': typeof TestRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/login' | '/register' | '/test'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/account'
+    | '/contact'
+    | '/login'
+    | '/register'
+    | '/scraping-order'
+    | '/test'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/login' | '/register' | '/test'
-  id: '__root__' | '/' | '/about' | '/login' | '/register' | '/test'
+  to:
+    | '/'
+    | '/about'
+    | '/account'
+    | '/contact'
+    | '/login'
+    | '/register'
+    | '/scraping-order'
+    | '/test'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/account'
+    | '/contact'
+    | '/login'
+    | '/register'
+    | '/scraping-order'
+    | '/test'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AccountRoute: typeof AccountRoute
+  ContactRoute: typeof ContactRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
+  ScrapingOrderRoute: typeof ScrapingOrderRoute
   TestRoute: typeof TestRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AccountRoute: AccountRoute,
+  ContactRoute: ContactRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
+  ScrapingOrderRoute: ScrapingOrderRoute,
   TestRoute: TestRoute,
 }
 
@@ -152,8 +231,11 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
+        "/account",
+        "/contact",
         "/login",
         "/register",
+        "/scraping-order",
         "/test"
       ]
     },
@@ -163,11 +245,20 @@ export const routeTree = rootRoute
     "/about": {
       "filePath": "about.tsx"
     },
+    "/account": {
+      "filePath": "account.tsx"
+    },
+    "/contact": {
+      "filePath": "contact.tsx"
+    },
     "/login": {
       "filePath": "login.tsx"
     },
     "/register": {
       "filePath": "register.tsx"
+    },
+    "/scraping-order": {
+      "filePath": "scraping-order.tsx"
     },
     "/test": {
       "filePath": "test.tsx"

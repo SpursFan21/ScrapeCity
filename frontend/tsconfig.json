@@ -5,6 +5,12 @@
     "jsx": "react-jsx",
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Bundler"
-  }
+    "moduleResolution": "Node",
+    "baseUrl": "./src",
+    "paths": {
+      "*": ["node_modules/*", "*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }
