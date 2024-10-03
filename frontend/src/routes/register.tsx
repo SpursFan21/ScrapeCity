@@ -2,6 +2,16 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { createFileRoute } from '@tanstack/react-router';
+import {
+  Box,
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Alert,
+  Link as MuiLink,
+} from '@mui/material';
 
 export const Route = createFileRoute('/register')({
   component: RegisterPage,
@@ -15,12 +25,12 @@ function RegisterPage() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // Check if passwords match
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError('Passwords do not match.');
       return;
     }
 
@@ -45,74 +55,81 @@ function RegisterPage() {
     } catch (error) {
       // Handle potential errors
       if (axios.isAxiosError(error)) {
-        const errorMsg = error.response?.data.error || error.response?.data.message || "Registration failed.";
+        const errorMsg = error.response?.data.error || error.response?.data.message || 'Registration failed.';
         setError(errorMsg);
       } else {
-        setError("An unexpected error occurred.");
+        setError('An unexpected error occurred.');
       }
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-blue-500 p-10 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-white text-2xl text-center mb-6">Register</h2>
-        {error && <p className="text-red-500">{error}</p>}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <input
-              type="email"
-              placeholder="Email"
+    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh" bgcolor="grey.100">
+      <Container maxWidth="sm">
+        <Paper elevation={3} sx={{ p: 5 }}>
+          <Typography variant="h4" textAlign="center" mb={3}>
+            Register
+          </Typography>
+          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+          <Box component="form" onSubmit={handleSubmit} noValidate>
+            <TextField
+              label="Email"
+              variant="outlined"
+              fullWidth
+              name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 rounded-md border border-gray-300"
               required
+              margin="normal"
+              InputProps={{ style: { backgroundColor: 'white' } }}
             />
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Username"
+            <TextField
+              label="Username"
+              variant="outlined"
+              fullWidth
+              name="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full p-3 rounded-md border border-gray-300"
               required
+              margin="normal"
+              InputProps={{ style: { backgroundColor: 'white' } }}
             />
-          </div>
-          <div>
-            <input
+            <TextField
+              label="Password"
+              variant="outlined"
+              fullWidth
+              name="password"
               type="password"
-              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 rounded-md border border-gray-300"
               required
+              margin="normal"
+              InputProps={{ style: { backgroundColor: 'white' } }}
             />
-          </div>
-          <div>
-            <input
+            <TextField
+              label="Re-Enter Password"
+              variant="outlined"
+              fullWidth
+              name="confirmPassword"
               type="password"
-              placeholder="Re-Enter Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full p-3 rounded-md border border-gray-300"
               required
+              margin="normal"
+              InputProps={{ style: { backgroundColor: 'white' } }}
             />
-          </div>
-          <div className="flex justify-between items-center">
-            <button
-              type="submit"
-              className="bg-blue-700 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-            >
-              Register
-            </button>
-            <Link to="/login" className="text-white hover:underline">
-              Login
-            </Link>
-          </div>
-        </form>
-      </div>
-    </div>
+            <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
+              <Button type="submit" variant="contained" color="primary">
+                Register
+              </Button>
+              <MuiLink component={Link} to="/login" color="inherit" underline="hover">
+                Login
+              </MuiLink>
+            </Box>
+          </Box>
+        </Paper>
+      </Container>
+    </Box>
   );
 }
 

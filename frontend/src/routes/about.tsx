@@ -1,20 +1,31 @@
-import * as React from 'react'
-import { createFileRoute } from '@tanstack/react-router'
+import * as React from 'react';
+import { createFileRoute } from '@tanstack/react-router';
+import { Box, Container, Typography, Paper } from '@mui/material';
 
 export const Route = createFileRoute('/about')({
   component: AboutComponent,
-})
+});
 
 function AboutComponent() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-    <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-4xl text-center">
-      <h1 className="text-3xl font-bold mb-4">About Scrape City</h1>
-      
-     {/* TODO */}
-
-    </div>
-
-  </div>
-  )
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      minHeight="100vh"
+      bgcolor="grey.100"
+    >
+      <Container maxWidth="lg">
+        <Paper elevation={3} sx={{ p: 4, textAlign: 'center' }}>
+          <Typography variant="h3" component="h1" gutterBottom>
+            About Scrape City
+          </Typography>
+          {/* TODO */}
+        </Paper>
+      </Container>
+    </Box>
+  );
 }
+
+export default AboutComponent;

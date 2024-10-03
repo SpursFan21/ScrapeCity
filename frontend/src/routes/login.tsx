@@ -3,6 +3,16 @@ import { Link, createFileRoute } from '@tanstack/react-router';
 import axios from 'axios';
 import { useNavigate } from '@tanstack/react-router';
 import { useAuth } from '../context/AuthContext';
+import {
+  Box,
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Alert,
+  Link as MuiLink,
+} from '@mui/material';
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
@@ -15,7 +25,7 @@ function LoginPage() {
   const navigate = useNavigate();
   const { setUser } = useAuth();
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
@@ -48,45 +58,49 @@ function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-blue-500 p-10 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-white text-2xl text-center mb-6">Log in</h2>
-        {error && <p className="text-red-500">{error}</p>}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <input
-              type="text"
-              placeholder="Username"
+    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh" bgcolor="grey.100">
+      <Container maxWidth="sm">
+        <Paper elevation={3} sx={{ p: 5 }}>
+          <Typography variant="h4" textAlign="center" mb={3}>
+            Log in
+          </Typography>
+          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+          <Box component="form" onSubmit={handleSubmit} noValidate>
+            <TextField
+              label="Username"
+              variant="outlined"
+              fullWidth
+              name="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full p-3 rounded-md border border-gray-300"
               required
+              margin="normal"
+              InputProps={{ style: { backgroundColor: 'white' } }}
             />
-          </div>
-          <div>
-            <input
+            <TextField
+              label="Password"
+              variant="outlined"
+              fullWidth
+              name="password"
               type="password"
-              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 rounded-md border border-gray-300"
               required
+              margin="normal"
+              InputProps={{ style: { backgroundColor: 'white' } }}
             />
-          </div>
-          <div className="flex justify-between items-center">
-            <button
-              type="submit"
-              className="bg-blue-700 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-            >
-              Log in
-            </button>
-            <Link to="/register" className="text-white hover:underline">
-              Register
-            </Link>
-          </div>
-        </form>
-      </div>
-    </div>
+            <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
+              <Button type="submit" variant="contained" color="primary">
+                Log in
+              </Button>
+              <MuiLink component={Link} to="/register" color="inherit" underline="hover">
+                Register
+              </MuiLink>
+            </Box>
+          </Box>
+        </Paper>
+      </Container>
+    </Box>
   );
 }
 

@@ -3,6 +3,15 @@ import { createFileRoute } from '@tanstack/react-router';
 import axios from 'axios';
 import { useNavigate } from '@tanstack/react-router';
 import { useAuth } from '../context/AuthContext';
+import {
+  Box,
+  Container,
+  Typography,
+  Paper,
+  TextField,
+  Button,
+  Grid,
+} from '@mui/material';
 
 export const Route = createFileRoute('/account')({
   component: AccountPage,
@@ -13,11 +22,11 @@ function AccountPage() {
     username: '',
     email: '',
     password: '',
-    newPassword: '', 
+    newPassword: '',
   });
   const [editing, setEditing] = useState(false);
   const navigate = useNavigate();
-  
+
   const { user, isLoggedIn } = useAuth(); // Get user info and login status from AuthContext
 
   const maskPassword = (password: string) => '*'.repeat(password.length);
@@ -37,7 +46,7 @@ function AccountPage() {
     setEditing(true);
   };
 
-  const handleUpdate = async (event: React.FormEvent) => {
+  const handleUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       const token = localStorage.getItem('accessToken');
@@ -61,76 +70,81 @@ function AccountPage() {
 
   if (!isLoggedIn) {
     return (
-      <div className="text-center">
-        <h2>You need to log in to view your account details</h2>
-      </div>
+      <Box textAlign="center" mt={5}>
+        <Typography variant="h4">You need to log in to view your account details</Typography>
+      </Box>
     );
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-black text-2xl text-center mb-6">Account Details</h2>
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Username:</label>
-          <p className="border p-2 rounded">{userDetails.username}</p>
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Email:</label>
-          <p className="border p-2 rounded">{userDetails.email}</p>
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Password:</label>
-          <p className="border p-2 rounded">{maskPassword(userDetails.password)}</p>
-        </div>
-        {!editing ? (
-          <button
-            onClick={handleEdit}
-            className="bg-blue-500 text-white rounded px-4 py-2 w-full"
-          >
-            Edit Details
-          </button>
-        ) : (
-          <form onSubmit={handleUpdate} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">New Username:</label>
-              <input
-                type="text"
-                value={userDetails.username}
-                onChange={(e) => setUserDetails({ ...userDetails, username: e.target.value })}
-                className="border rounded px-3 py-2 w-full"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">New Email:</label>
-              <input
-                type="email"
-                value={userDetails.email}
-                onChange={(e) => setUserDetails({ ...userDetails, email: e.target.value })}
-                className="border rounded px-3 py-2 w-full"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">New Password (optional):</label>
-              <input
-                type="password"
-                value={userDetails.newPassword}
-                onChange={(e) => setUserDetails({ ...userDetails, newPassword: e.target.value })}
-                className="border rounded px-3 py-2 w-full"
-              />
-            </div>
-            <button
-              type="submit"
-              className="bg-blue-700 text-white rounded px-4 py-2 w-full"
-            >
-              Update Details
-            </button>
-          </form>
-        )}
-      </div>
-    </div>
+    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh" bgcolor="grey.100">
+      <Container maxWidth="sm">
+        <Paper elevation={3} sx={{ p: 4 }}>
+          <Typography variant="h4" component="h2" textAlign="center" gutterBottom>
+            Account Details
+          </Typography>
+          {!editing ? (
+            <Box>
+              <Grid container spacing={2} mb={3}>
+                <Grid item xs={12}>
+                  <Typography variant="body1" fontWeight="bold">Username:</Typography>
+                  <Typography variant="body1" sx={{ border: '1px solid', p: 1, borderRadius: 1 }}>{userDetails.username}</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="body1" fontWeight="bold">Email:</Typography>
+                  <Typography variant="body1" sx={{ border: '1px solid', p: 1, borderRadius: 1 }}>{userDetails.email}</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="body1" fontWeight="bold">Password:</Typography>
+                  <Typography variant="body1" sx={{ border: '1px solid', p: 1, borderRadius: 1 }}>{maskPassword(userDetails.password)}</Typography>
+                </Grid>
+              </Grid>
+              <Button variant="contained" color="primary" fullWidth onClick={handleEdit}>
+                Edit Details
+              </Button>
+            </Box>
+          ) : (
+            <Box component="form" onSubmit={handleUpdate}>
+              <Grid container spacing={2} mb={3}>
+                <Grid item xs={12}>
+                  <TextField
+                    label="New Username"
+                    variant="outlined"
+                    fullWidth
+                    value={userDetails.username}
+                    onChange={(e) => setUserDetails({ ...userDetails, username: e.target.value })}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="New Email"
+                    variant="outlined"
+                    fullWidth
+                    value={userDetails.email}
+                    onChange={(e) => setUserDetails({ ...userDetails, email: e.target.value })}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="New Password (optional)"
+                    variant="outlined"
+                    type="password"
+                    fullWidth
+                    value={userDetails.newPassword}
+                    onChange={(e) => setUserDetails({ ...userDetails, newPassword: e.target.value })}
+                  />
+                </Grid>
+              </Grid>
+              <Button type="submit" variant="contained" color="primary" fullWidth>
+                Update Details
+              </Button>
+            </Box>
+          )}
+        </Paper>
+      </Container>
+    </Box>
   );
 }
 

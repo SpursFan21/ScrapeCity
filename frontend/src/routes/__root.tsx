@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, Outlet, createRootRoute } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { useAuth, AuthProvider } from '../context/AuthContext';
+import { AppBar, Toolbar, Typography, Button, Container, Box } from '@mui/material';
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -11,41 +12,62 @@ function RootComponent() {
   const { isLoggedIn, user, handleLogout } = useAuth(); // Get auth context
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="bg-blue-500 text-white fixed w-full">
-        <nav className="container mx-auto flex justify-between items-center p-4">
-          <h1 className="text-3xl font-bold">
-            <Link to="/">Scrape City</Link>
-          </h1>
-          <ul className="flex space-x-4">
-            {/* Display different menus based on logged-in status */}
-            {isLoggedIn ? (
-              <>
-                <li><Link to="/about" className="hover:underline">About</Link></li>
-                <li><Link to="/contact" className="hover:underline">Contact</Link></li>
-                <li><Link to="/scraping-order" className="hover:underline">Scraping Order</Link></li>
-                <li><Link to="/account" className="hover:underline">Account</Link></li>
-                <li><button onClick={handleLogout} className="hover:underline">Log-out</button></li>
-                <li className="ml-4">Welcome, {user?.username}</li>
-              </>
-            ) : (
-              <>
-                <li><Link to="/about" className="hover:underline">About</Link></li>
-                <li><Link to="/contact" className="hover:underline">Contact</Link></li>
-                <li><Link to="/register" className="hover:underline">Register</Link></li>
-                <li><Link to="/login" className="hover:underline">Log-in</Link></li>
-              </>
-            )}
-          </ul>
-        </nav>
-      </header>
+    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <AppBar position="fixed">
+        <Container maxWidth="lg">
+          <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
+            <Typography variant="h4" component={Link} to="/" color="inherit" sx={{ textDecoration: 'none' }}>
+              Scrape City
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 2, alignItems: "center" }}>
+              {isLoggedIn ? (
+                <>
+                  <Button color="inherit" component={Link} to="/about">
+                    About
+                  </Button>
+                  <Button color="inherit" component={Link} to="/contact">
+                    Contact
+                  </Button>
+                  <Button color="inherit" component={Link} to="/scraping-order">
+                    Scraping Order
+                  </Button>
+                  <Button color="inherit" component={Link} to="/account">
+                    Account
+                  </Button>
+                  <Button color="inherit" onClick={handleLogout}>
+                    Log-out
+                  </Button>
+                  <Typography variant="body1" sx={{ ml: 2 }}>
+                    Welcome, {user?.username}
+                  </Typography>
+                </>
+              ) : (
+                <>
+                  <Button color="inherit" component={Link} to="/about">
+                    About
+                  </Button>
+                  <Button color="inherit" component={Link} to="/contact">
+                    Contact
+                  </Button>
+                  <Button color="inherit" component={Link} to="/register">
+                    Register
+                  </Button>
+                  <Button color="inherit" component={Link} to="/login">
+                    Log-in
+                  </Button>
+                </>
+              )}
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
 
-      <main className="flex-grow mt-16">
+      <Box component="main" sx={{ flexGrow: 1, mt: 10 }}>
         <Outlet /> {/* This is where the nested routes will be rendered */}
-      </main>
+      </Box>
 
       <TanStackRouterDevtools position="bottom-right" />
-    </div>
+    </Box>
   );
 }
 
