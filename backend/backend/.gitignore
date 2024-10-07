@@ -36,3 +36,6 @@ staticfiles/
 
 # macOS
 .DS_Store
+
+# .env
+.env

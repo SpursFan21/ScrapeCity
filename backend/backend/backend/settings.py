@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework_simplejwt',
     'accounts',
+    'scraping_engine',
 ]
 
 MIDDLEWARE = [
@@ -84,8 +85,8 @@ DATABASES = {
         'NAME': '205dev',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': '10.99.0.25',
-        'PORT': '5439',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
