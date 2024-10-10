@@ -41,8 +41,25 @@ def scrape_view(request):
     if not url:
         return Response({"detail": "URL is required for scraping."}, status=status.HTTP_400_BAD_REQUEST)
 
+    # Get Scrape Ninja URL and RapidAPI headers from environment
+    SCRAPE_NINJA_URL = os.getenv('SCRAPE_NINJA_URL')
+    RAPID_API_HOST = os.getenv('RAPID_API_HOST')
+    RAPID_API_KEY = os.getenv('RAPID_API_KEY')
+
+    if not SCRAPE_NINJA_URL or not RAPID_API_HOST or not RAPID_API_KEY:
+        return Response({"detail": "API configuration error. Please check your environment variables."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    headers = {
+        'x-rapidapi-host': RAPID_API_HOST,
+        'x-rapidapi-key': RAPID_API_KEY,
+        'Content-Type': 'application/json'
+    }
+
     # Call Scrape Ninja API to perform the scraping
-    response = requests.post("https://api.scrape.ninja/scrape", json={"url": url, "geo": geo, "retryNum": retry_num})
+    try:
+        response = requests.post(SCRAPE_NINJA_URL, json={"url": url, "geo": geo, "retryNum": retry_num}, headers=headers)
+    except requests.exceptions.RequestException as e:
+        return Response({"detail": f"Error connecting to Scrape Ninja API: {str(e)}"}, status=status.HTTP_502_BAD_GATEWAY)
 
     if response.status_code == 200:
         scraped_data = response.json()
@@ -59,6 +76,7 @@ def scrape_view(request):
         return Response(scraped_data, status=status.HTTP_200_OK)
 
     return Response(response.json(), status=response.status_code)
+
 
 
 class ScrapingOrdersList(generics.ListAPIView):
