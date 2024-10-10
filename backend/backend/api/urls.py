@@ -1,8 +1,8 @@
 # api/urls.py
-
 from django.urls import path
 from accounts.views import RegisterView, LoginView, VerifyTokenView, UpdateAccountView
 from scraping_engine.views import scrape_view, ScrapingOrdersList, ScrapingOrderDetail
+from pandas.views import get_cleaned_data, clean_and_store_data
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
@@ -11,5 +11,7 @@ urlpatterns = [
     path('update-account/', UpdateAccountView.as_view(), name='update-account'),
     path('scrape/', scrape_view, name='scrape'),
     path('scraping-orders/', ScrapingOrdersList.as_view(), name='scraping-orders'),
-    path('scraping-order/<int:order_id>/', ScrapingOrderDetail.as_view(), name='scraping-order-detail'),
+    path('scraping-order/<uuid:order_id>/', ScrapingOrderDetail.as_view(), name='scraping-order-detail'),
+    path('cleaned-data/<uuid:order_id>/', clean_and_store_data, name='cleaned-data-store'),
+    path('cleaned-data/<uuid:order_id>/csv/', get_cleaned_data, name='cleaned-data-get'),
 ]
