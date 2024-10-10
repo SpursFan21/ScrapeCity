@@ -12,8 +12,12 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as TestImport } from './routes/test'
+import { Route as ScrapingOrdersImport } from './routes/scraping-orders'
+import { Route as ScrapingOrderTargetImport } from './routes/scraping-order-target'
 import { Route as ScrapingOrderImport } from './routes/scraping-order'
 import { Route as RegisterImport } from './routes/register'
+import { Route as PaymentPageImport } from './routes/payment-page'
+import { Route as OrderDetailsImport } from './routes/order-details'
 import { Route as LoginImport } from './routes/login'
 import { Route as ContactImport } from './routes/contact'
 import { Route as AccountImport } from './routes/account'
@@ -27,6 +31,16 @@ const TestRoute = TestImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ScrapingOrdersRoute = ScrapingOrdersImport.update({
+  path: '/scraping-orders',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ScrapingOrderTargetRoute = ScrapingOrderTargetImport.update({
+  path: '/scraping-order-target',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const ScrapingOrderRoute = ScrapingOrderImport.update({
   path: '/scraping-order',
   getParentRoute: () => rootRoute,
@@ -34,6 +48,16 @@ const ScrapingOrderRoute = ScrapingOrderImport.update({
 
 const RegisterRoute = RegisterImport.update({
   path: '/register',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PaymentPageRoute = PaymentPageImport.update({
+  path: '/payment-page',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const OrderDetailsRoute = OrderDetailsImport.update({
+  path: '/order-details',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -101,6 +125,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
+    '/order-details': {
+      id: '/order-details'
+      path: '/order-details'
+      fullPath: '/order-details'
+      preLoaderRoute: typeof OrderDetailsImport
+      parentRoute: typeof rootRoute
+    }
+    '/payment-page': {
+      id: '/payment-page'
+      path: '/payment-page'
+      fullPath: '/payment-page'
+      preLoaderRoute: typeof PaymentPageImport
+      parentRoute: typeof rootRoute
+    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -113,6 +151,20 @@ declare module '@tanstack/react-router' {
       path: '/scraping-order'
       fullPath: '/scraping-order'
       preLoaderRoute: typeof ScrapingOrderImport
+      parentRoute: typeof rootRoute
+    }
+    '/scraping-order-target': {
+      id: '/scraping-order-target'
+      path: '/scraping-order-target'
+      fullPath: '/scraping-order-target'
+      preLoaderRoute: typeof ScrapingOrderTargetImport
+      parentRoute: typeof rootRoute
+    }
+    '/scraping-orders': {
+      id: '/scraping-orders'
+      path: '/scraping-orders'
+      fullPath: '/scraping-orders'
+      preLoaderRoute: typeof ScrapingOrdersImport
       parentRoute: typeof rootRoute
     }
     '/test': {
@@ -133,8 +185,12 @@ export interface FileRoutesByFullPath {
   '/account': typeof AccountRoute
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
+  '/order-details': typeof OrderDetailsRoute
+  '/payment-page': typeof PaymentPageRoute
   '/register': typeof RegisterRoute
   '/scraping-order': typeof ScrapingOrderRoute
+  '/scraping-order-target': typeof ScrapingOrderTargetRoute
+  '/scraping-orders': typeof ScrapingOrdersRoute
   '/test': typeof TestRoute
 }
 
@@ -144,8 +200,12 @@ export interface FileRoutesByTo {
   '/account': typeof AccountRoute
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
+  '/order-details': typeof OrderDetailsRoute
+  '/payment-page': typeof PaymentPageRoute
   '/register': typeof RegisterRoute
   '/scraping-order': typeof ScrapingOrderRoute
+  '/scraping-order-target': typeof ScrapingOrderTargetRoute
+  '/scraping-orders': typeof ScrapingOrdersRoute
   '/test': typeof TestRoute
 }
 
@@ -156,8 +216,12 @@ export interface FileRoutesById {
   '/account': typeof AccountRoute
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
+  '/order-details': typeof OrderDetailsRoute
+  '/payment-page': typeof PaymentPageRoute
   '/register': typeof RegisterRoute
   '/scraping-order': typeof ScrapingOrderRoute
+  '/scraping-order-target': typeof ScrapingOrderTargetRoute
+  '/scraping-orders': typeof ScrapingOrdersRoute
   '/test': typeof TestRoute
 }
 
@@ -169,8 +233,12 @@ export interface FileRouteTypes {
     | '/account'
     | '/contact'
     | '/login'
+    | '/order-details'
+    | '/payment-page'
     | '/register'
     | '/scraping-order'
+    | '/scraping-order-target'
+    | '/scraping-orders'
     | '/test'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -179,8 +247,12 @@ export interface FileRouteTypes {
     | '/account'
     | '/contact'
     | '/login'
+    | '/order-details'
+    | '/payment-page'
     | '/register'
     | '/scraping-order'
+    | '/scraping-order-target'
+    | '/scraping-orders'
     | '/test'
   id:
     | '__root__'
@@ -189,8 +261,12 @@ export interface FileRouteTypes {
     | '/account'
     | '/contact'
     | '/login'
+    | '/order-details'
+    | '/payment-page'
     | '/register'
     | '/scraping-order'
+    | '/scraping-order-target'
+    | '/scraping-orders'
     | '/test'
   fileRoutesById: FileRoutesById
 }
@@ -201,8 +277,12 @@ export interface RootRouteChildren {
   AccountRoute: typeof AccountRoute
   ContactRoute: typeof ContactRoute
   LoginRoute: typeof LoginRoute
+  OrderDetailsRoute: typeof OrderDetailsRoute
+  PaymentPageRoute: typeof PaymentPageRoute
   RegisterRoute: typeof RegisterRoute
   ScrapingOrderRoute: typeof ScrapingOrderRoute
+  ScrapingOrderTargetRoute: typeof ScrapingOrderTargetRoute
+  ScrapingOrdersRoute: typeof ScrapingOrdersRoute
   TestRoute: typeof TestRoute
 }
 
@@ -212,8 +292,12 @@ const rootRouteChildren: RootRouteChildren = {
   AccountRoute: AccountRoute,
   ContactRoute: ContactRoute,
   LoginRoute: LoginRoute,
+  OrderDetailsRoute: OrderDetailsRoute,
+  PaymentPageRoute: PaymentPageRoute,
   RegisterRoute: RegisterRoute,
   ScrapingOrderRoute: ScrapingOrderRoute,
+  ScrapingOrderTargetRoute: ScrapingOrderTargetRoute,
+  ScrapingOrdersRoute: ScrapingOrdersRoute,
   TestRoute: TestRoute,
 }
 
@@ -234,8 +318,12 @@ export const routeTree = rootRoute
         "/account",
         "/contact",
         "/login",
+        "/order-details",
+        "/payment-page",
         "/register",
         "/scraping-order",
+        "/scraping-order-target",
+        "/scraping-orders",
         "/test"
       ]
     },
@@ -254,11 +342,23 @@ export const routeTree = rootRoute
     "/login": {
       "filePath": "login.tsx"
     },
+    "/order-details": {
+      "filePath": "order-details.tsx"
+    },
+    "/payment-page": {
+      "filePath": "payment-page.tsx"
+    },
     "/register": {
       "filePath": "register.tsx"
     },
     "/scraping-order": {
       "filePath": "scraping-order.tsx"
+    },
+    "/scraping-order-target": {
+      "filePath": "scraping-order-target.tsx"
+    },
+    "/scraping-orders": {
+      "filePath": "scraping-orders.tsx"
     },
     "/test": {
       "filePath": "test.tsx"
