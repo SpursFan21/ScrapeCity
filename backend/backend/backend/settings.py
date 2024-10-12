@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'accounts',
     'scraping_engine',
-    'pandas',
+    'data_cleaner',
 ]
 
 MIDDLEWARE = [

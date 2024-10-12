@@ -24,5 +24,5 @@ urlpatterns = [
     path('api/', include('api.urls')),
     path('accounts/', include('accounts.urls')),
     path('scraping_engine/', include('scraping_engine.urls')),
-    path('pandas/', include('pandas.urls')),
+    path('data_cleaner/', include('data_cleaner.urls')),
 ]
