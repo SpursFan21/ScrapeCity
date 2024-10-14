@@ -93,6 +93,14 @@ class ScrapingOrderDetail(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        # Get the order ID from the URL and return the specific order for the authenticated user
         order_id = self.kwargs['order_id']
-        return generics.get_object_or_404(ScrapedData, order_id=order_id, user=self.request.user)
+        return generics.get_object_or_404(ScrapedData, id=order_id, user=self.request.user)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+
+        response_data = serializer.data
+        response_data['raw_data'] = instance.scraped_content
+        
+        return Response(response_data, status=status.HTTP_200_OK)
