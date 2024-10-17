@@ -10,7 +10,6 @@ const ScrapingOrders: React.FC = () => {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
   const [emptyOrderNotification, setEmptyOrderNotification] = useState<boolean>(false);
   const router = useRouter();
 
@@ -48,7 +47,10 @@ const ScrapingOrders: React.FC = () => {
   }, []); // Fetch orders once on component mount
 
   const handleOrderClick = (orderId: string) => {
-    // Navigate to the dynamic order details page
+    // Save the order ID to local storage
+    localStorage.setItem('selectedOrderId', orderId);
+
+    // Navigate to the dynamic order details page with the order ID
     router.navigate({ to: `/order-details/${orderId}` });
   };
 
@@ -103,7 +105,7 @@ const ScrapingOrders: React.FC = () => {
           )}
         </Paper>
       </Container>
-      
+
       {/* Snackbar for empty orders notification */}
       <Snackbar
         open={emptyOrderNotification}

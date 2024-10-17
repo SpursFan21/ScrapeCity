@@ -7,6 +7,8 @@ import os
 from dotenv import load_dotenv
 from .models import ScrapedData
 from .serializers import ScrapedDataSerializer
+import logging
+from rest_framework.exceptions import NotFound
 
 load_dotenv()
 
@@ -88,19 +90,47 @@ class ScrapingOrdersList(generics.ListAPIView):
         return ScrapedData.objects.filter(user=self.request.user)
 
 
+# Set up logging
+logger = logging.getLogger(__name__)
+
 class ScrapingOrderDetail(generics.RetrieveAPIView):
     serializer_class = ScrapedDataSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        order_id = self.kwargs['order_id']
-        return generics.get_object_or_404(ScrapedData, id=order_id, user=self.request.user)
+        order_id = self.kwargs.get('order_id')
+        user = self.request.user
+
+        # Logging for debugging
+        logger.info(f"Attempting to retrieve order with order_id: {order_id} for user: {user.id}, username: {user.username}")
+
+        if not order_id:
+            logger.error("No order_id provided in the URL.")
+            raise NotFound(detail="Order ID is missing in the URL.", code=status.HTTP_400_BAD_REQUEST)
+
+        if not user.is_authenticated:
+            logger.error("User is not authenticated.")
+            return Response({"detail": "Authentication required."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            # Fetch the order by `order_id`
+            scraped_data = ScrapedData.objects.get(order_id=order_id, user=user)
+            logger.info(f"Order {order_id} found for user {user.username}.")
+            return scraped_data
+        except ScrapedData.DoesNotExist:
+            logger.warning(f"No order with order_id {order_id} found for user {user.username}.")
+            raise NotFound(detail=f"Order with order_id {order_id} not found for the current user.", code=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            logger.error(f"An unexpected error occurred: {e}")
+            raise NotFound(detail="An unexpected error occurred while fetching the order.", code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def retrieve(self, request, *args, **kwargs):
+        # Get the order object using the modified get_object method
         instance = self.get_object()
-        serializer = self.get_serializer(instance)
 
-        response_data = serializer.data
-        response_data['raw_data'] = instance.scraped_content
-        
-        return Response(response_data, status=status.HTTP_200_OK)
+        # Log the raw data for debugging
+        logger.info(f"Returning raw data: {instance.scraped_content}")
+
+        # Serialize the instance (including raw data)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
