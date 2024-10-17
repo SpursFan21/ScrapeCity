@@ -1,8 +1,26 @@
-import React from 'react';
-import { createFileRoute } from '@tanstack/react-router';
+import React, { useState } from 'react';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Box, Button, Container, Paper, TextField, Typography } from '@mui/material';
 
 const ScrapingOrder: React.FC = () => {
+  const [url, setUrl] = useState('');
+  const navigate = useNavigate();
+
+  const handleProceed = () => {
+    if (url) {
+      // Save URL and hardcoded parameters to localStorage
+      localStorage.setItem('scrapeData', JSON.stringify({
+        url: url,
+        geo: 'us',     // Hardcoded value
+        retryNum: 1    // Hardcoded value
+      }));
+
+      navigate({ to: '/payment-page' });
+    } else {
+      alert('Please enter a valid URL.');
+    }
+  };
+
   return (
     <Box
       display="flex"
@@ -31,28 +49,19 @@ const ScrapingOrder: React.FC = () => {
               label="URL"
               variant="filled"
               fullWidth
-              InputProps={{
-                sx: { bgcolor: 'white' },
-              }}
-            />
-            <TextField
-              label="Parameter 1"
-              variant="filled"
-              fullWidth
-              InputProps={{
-                sx: { bgcolor: 'white' },
-              }}
-            />
-            <TextField
-              label="Parameter 2"
-              variant="filled"
-              fullWidth
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
               InputProps={{
                 sx: { bgcolor: 'white' },
               }}
             />
 
-            <Button variant="contained" color="primary" sx={{ mt: 2, bgcolor: '#00aeff' }}>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ mt: 2, bgcolor: '#00aeff' }}
+              onClick={handleProceed}
+            >
               Proceed To Payment
             </Button>
           </Box>
@@ -62,7 +71,8 @@ const ScrapingOrder: React.FC = () => {
   );
 };
 
-
 export const Route = createFileRoute('/scraping-order-target')({
   component: ScrapingOrder,
-})
+});
+
+export default ScrapingOrder;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useRouter } from '@tanstack/react-router';
 import {
   Box,
   Container,
@@ -9,6 +9,16 @@ import {
 } from '@mui/material';
 
 const ScrapingOrder: React.FC = () => {
+  const router = useRouter();
+
+  const handleNewScrapingOrder = () => {
+    router.navigate({ to: '/scraping-order-target' });
+  };
+
+  const handleCurrentOrders = () => {
+    router.navigate({ to: '/scraping-orders' });
+  };
+
   return (
     <Box display="flex" alignItems="center" justifyContent="center" minHeight="100vh" bgcolor="grey.100">
       <Container maxWidth="sm">
@@ -17,10 +27,20 @@ const ScrapingOrder: React.FC = () => {
             Scraping Order Menu
           </Typography>
           <Box display="flex" flexDirection="column" gap={2}>
-            <Button variant="contained" color="primary" fullWidth>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={handleNewScrapingOrder}
+            >
               New Scraping Order
             </Button>
-            <Button variant="contained" color="primary" fullWidth>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={handleCurrentOrders}
+            >
               Current Orders
             </Button>
           </Box>

@@ -23,4 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     path('accounts/', include('accounts.urls')),
+    path('scraping_engine/', include('scraping_engine.urls')),
+    path('data_cleaner/', include('data_cleaner.urls')),
 ]
