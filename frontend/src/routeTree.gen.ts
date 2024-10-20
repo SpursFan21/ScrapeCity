@@ -23,6 +23,7 @@ import { Route as AccountImport } from './routes/account'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 import { Route as OrderDetailsOrderIdImport } from './routes/order-details.$orderId'
+import { Route as CleanedDataOrderIdImport } from './routes/cleaned-data.$orderId'
 
 // Create/Update Routes
 
@@ -83,6 +84,11 @@ const IndexRoute = IndexImport.update({
 
 const OrderDetailsOrderIdRoute = OrderDetailsOrderIdImport.update({
   path: '/order-details/$orderId',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CleanedDataOrderIdRoute = CleanedDataOrderIdImport.update({
+  path: '/cleaned-data/$orderId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -167,6 +173,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestImport
       parentRoute: typeof rootRoute
     }
+    '/cleaned-data/$orderId': {
+      id: '/cleaned-data/$orderId'
+      path: '/cleaned-data/$orderId'
+      fullPath: '/cleaned-data/$orderId'
+      preLoaderRoute: typeof CleanedDataOrderIdImport
+      parentRoute: typeof rootRoute
+    }
     '/order-details/$orderId': {
       id: '/order-details/$orderId'
       path: '/order-details/$orderId'
@@ -191,6 +204,7 @@ export interface FileRoutesByFullPath {
   '/scraping-order-target': typeof ScrapingOrderTargetRoute
   '/scraping-orders': typeof ScrapingOrdersRoute
   '/test': typeof TestRoute
+  '/cleaned-data/$orderId': typeof CleanedDataOrderIdRoute
   '/order-details/$orderId': typeof OrderDetailsOrderIdRoute
 }
 
@@ -206,6 +220,7 @@ export interface FileRoutesByTo {
   '/scraping-order-target': typeof ScrapingOrderTargetRoute
   '/scraping-orders': typeof ScrapingOrdersRoute
   '/test': typeof TestRoute
+  '/cleaned-data/$orderId': typeof CleanedDataOrderIdRoute
   '/order-details/$orderId': typeof OrderDetailsOrderIdRoute
 }
 
@@ -222,6 +237,7 @@ export interface FileRoutesById {
   '/scraping-order-target': typeof ScrapingOrderTargetRoute
   '/scraping-orders': typeof ScrapingOrdersRoute
   '/test': typeof TestRoute
+  '/cleaned-data/$orderId': typeof CleanedDataOrderIdRoute
   '/order-details/$orderId': typeof OrderDetailsOrderIdRoute
 }
 
@@ -239,6 +255,7 @@ export interface FileRouteTypes {
     | '/scraping-order-target'
     | '/scraping-orders'
     | '/test'
+    | '/cleaned-data/$orderId'
     | '/order-details/$orderId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -253,6 +270,7 @@ export interface FileRouteTypes {
     | '/scraping-order-target'
     | '/scraping-orders'
     | '/test'
+    | '/cleaned-data/$orderId'
     | '/order-details/$orderId'
   id:
     | '__root__'
@@ -267,6 +285,7 @@ export interface FileRouteTypes {
     | '/scraping-order-target'
     | '/scraping-orders'
     | '/test'
+    | '/cleaned-data/$orderId'
     | '/order-details/$orderId'
   fileRoutesById: FileRoutesById
 }
@@ -283,6 +302,7 @@ export interface RootRouteChildren {
   ScrapingOrderTargetRoute: typeof ScrapingOrderTargetRoute
   ScrapingOrdersRoute: typeof ScrapingOrdersRoute
   TestRoute: typeof TestRoute
+  CleanedDataOrderIdRoute: typeof CleanedDataOrderIdRoute
   OrderDetailsOrderIdRoute: typeof OrderDetailsOrderIdRoute
 }
 
@@ -298,6 +318,7 @@ const rootRouteChildren: RootRouteChildren = {
   ScrapingOrderTargetRoute: ScrapingOrderTargetRoute,
   ScrapingOrdersRoute: ScrapingOrdersRoute,
   TestRoute: TestRoute,
+  CleanedDataOrderIdRoute: CleanedDataOrderIdRoute,
   OrderDetailsOrderIdRoute: OrderDetailsOrderIdRoute,
 }
 
@@ -324,6 +345,7 @@ export const routeTree = rootRoute
         "/scraping-order-target",
         "/scraping-orders",
         "/test",
+        "/cleaned-data/$orderId",
         "/order-details/$orderId"
       ]
     },
@@ -359,6 +381,9 @@ export const routeTree = rootRoute
     },
     "/test": {
       "filePath": "test.tsx"
+    },
+    "/cleaned-data/$orderId": {
+      "filePath": "cleaned-data.$orderId.tsx"
     },
     "/order-details/$orderId": {
       "filePath": "order-details.$orderId.tsx"
