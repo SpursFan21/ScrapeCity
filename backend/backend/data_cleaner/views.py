@@ -25,7 +25,6 @@ import json
 
 @api_view(['POST'])
 def clean_and_store_data(request, order_id):
-    
     if not request.user.is_authenticated:
         return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
     
@@ -34,6 +33,18 @@ def clean_and_store_data(request, order_id):
         order = ScrapedData.objects.get(order_id=order_id)
         user = request.user
         
+        # Check if the data has already been cleaned for this order and user
+        cleaned_data_entry = CleanedData.objects.filter(order=order, user=user).first()
+        
+        if cleaned_data_entry:
+            # If cleaned data already exists, return it
+            return Response({
+                'message': 'Cleaned data already exists',
+                'cleaned_order_id': cleaned_data_entry.cleaned_order_id,
+                'cleaned_data': cleaned_data_entry.cleaned_content['text']
+            }, status=status.HTTP_200_OK)
+        
+        # If not cleaned, proceed with the cleaning process
         scraped_content = order.scraped_content
         
         # If scraped_content is in JSON format, convert it to a string to process with BeautifulSoup
@@ -42,11 +53,11 @@ def clean_and_store_data(request, order_id):
         # Parse the raw HTML with BeautifulSoup
         soup = BeautifulSoup(raw_html, 'html.parser')
         
-        # Remove unnecessary tags like <style>, <script>, <link>, <button>, etc.
+        # Remove unwanted tags (style, script, etc.)
         for tag in soup(["style", "script", "link", "button", "nav", "footer", "header"]):
             tag.decompose()
 
-        # Extract meaningful content:
+        # Extract meaningful content
         meaningful_text = ""
         
         # Collect header tags (h1, h2, h3)

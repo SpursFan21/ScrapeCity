@@ -29,7 +29,7 @@ const OrderDetails: React.FC = () => {
     // Fetch order details if orderId is present
     const fetchOrderDetailsData = async () => {
       if (storedOrderId && isLoggedIn) {
-        const token = localStorage.getItem('accessToken'); // Fetch token from localStorage
+        const token = localStorage.getItem('accessToken');
         try {
           const details = await fetchOrderDetails(storedOrderId, token as string);
           setOrderDetails(details);
@@ -72,6 +72,9 @@ const OrderDetails: React.FC = () => {
     );
   }
 
+  // Define a local variable for orderId
+  const currentOrderId = orderDetails.order_id;
+
   return (
     <Box display="flex" alignItems="center" justifyContent="center" minHeight="100vh" bgcolor="grey.100">
       <Container maxWidth="sm">
@@ -104,6 +107,44 @@ const OrderDetails: React.FC = () => {
             <strong>Created At:</strong> {new Date(orderDetails.created_at).toLocaleString()}
           </Typography>
 
+          {/* Download Raw Data Button */}
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mb: 2, backgroundColor: '#3498db' }}
+            onClick={() => {
+              const dataStr = JSON.stringify(orderDetails.raw_data || {}, null, 2);
+              const blob = new Blob([dataStr], { type: 'application/json' });
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `raw_data_${currentOrderId}.json`;
+              a.click();
+              window.URL.revokeObjectURL(url);
+            }}
+          >
+            Download Raw Data
+          </Button>
+
+          {/* View Cleaned Data Button */}
+          <Button
+            variant="contained"
+            color="secondary"
+            fullWidth
+            sx={{ mb: 2, backgroundColor: '#2ecc71' }}
+            onClick={() => {
+              // Store current orderId in a local variable
+              const cleanedOrderId = currentOrderId;
+              console.log('Navigating to cleaned data for order:', cleanedOrderId);
+              
+              // Navigate to the cleaned data page
+              window.location.href = `/cleaned-data/${cleanedOrderId}`;
+            }}
+          >
+            View Cleaned Data
+          </Button>
+
           {/* Display Raw Data */}
           <Typography variant="body1" component="div" sx={{ mb: 2 }}>
             <strong>Raw Data:</strong>
@@ -111,26 +152,6 @@ const OrderDetails: React.FC = () => {
               {JSON.stringify(orderDetails.raw_data, null, 2)}
             </Box>
           </Typography>
-
-          {/* View Results Button */}
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ mb: 2, backgroundColor: '#3498db' }}
-          >
-            View Results
-          </Button>
-
-          {/* Download Results Button */}
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ backgroundColor: '#3498db' }}
-          >
-            Download Results
-          </Button>
         </Paper>
       </Container>
     </Box>
