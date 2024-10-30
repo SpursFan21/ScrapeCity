@@ -134,3 +134,25 @@ class ScrapingOrderDetail(generics.RetrieveAPIView):
         # Serialize the instance (including raw data)
         serializer = self.get_serializer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class ScrapingOrderBulkDelete(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        order_ids = request.data.get('order_ids', [])
+        user = request.user
+
+        logger.info(f"Attempting to delete orders with IDs: {order_ids} for user: {user.id}, username: {user.username}")
+
+        if not order_ids:
+            return Response({"detail": "No order IDs provided."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Delete the matching orders
+        deleted_count, _ = ScrapedData.objects.filter(order_id__in=order_ids, user=user).delete()
+
+        if deleted_count == 0:
+            logger.warning(f"No orders found for provided IDs: {order_ids} for user {user.username}.")
+            raise NotFound(detail="No matching orders found for deletion.", code=status.HTTP_404_NOT_FOUND)
+        
+        logger.info(f"Successfully deleted {deleted_count} orders for user {user.username}.")
+        return Response({"detail": f"Successfully deleted {deleted_count} orders."}, status=status.HTTP_204_NO_CONTENT)
