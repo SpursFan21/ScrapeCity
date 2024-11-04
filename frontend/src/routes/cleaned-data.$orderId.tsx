@@ -1,26 +1,28 @@
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
   Container,
   Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
 import { createFileRoute } from '@tanstack/react-router'; 
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import ReactJsonPretty from 'react-json-pretty';
+import 'react-json-pretty/themes/monikai.css';
 
 const fetchCleanedData = async (orderId: string, token: string) => {
-  const response = await axios.post(`http://127.0.0.1:8000/api/clean-data/${orderId}/`, {}, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await axios.post(
+    `http://127.0.0.1:8000/api/clean-data/${orderId}/`,
+    {},
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return response.data;
 };
 
@@ -38,6 +40,10 @@ const CleanedDataComponent: React.FC = () => {
         if (token) {
           try {
             const data = await fetchCleanedData(orderId, token);
+            // Ensure cleaned_data is parsed correctly
+            // if (data.cleaned_data && typeof data.cleaned_data === 'string') {
+            //   data.cleaned_data = JSON.parse(data.cleaned_data);
+            // }
             setCleanedData(data);
           } catch (err: any) {
             console.error('Failed to fetch cleaned data:', err);
@@ -100,15 +106,15 @@ const CleanedDataComponent: React.FC = () => {
       minHeight="80vh"
       bgcolor="grey.100"
     >
-      <Container maxWidth="md">
-        <Paper elevation={3} sx={{ p: 5 }}>
+      <Container maxWidth="lg">
+        <Paper elevation={3} sx={{ p: 5, my: 5 }}>
           <Typography variant="h4" component="h1" gutterBottom>
             Cleaned Data from Web Scraping Job
           </Typography>
-          
+
           {/* Button Box for Return and Download Buttons */}
           <Box display="flex" justifyContent="space-between" sx={{ mb: 2 }}>
-            <Button variant="contained" onClick={() => window.history.back()}> {/* Updated Return button logic */}
+            <Button variant="contained" onClick={() => window.history.back()}>
               Return
             </Button>
             <Button variant="contained" color="primary" onClick={handleDownload}>
@@ -116,32 +122,31 @@ const CleanedDataComponent: React.FC = () => {
             </Button>
           </Box>
 
-          <Table>
-            <TableBody>
-              <TableRow>
-                <TableCell variant="head">
-                  <Typography variant="h6">Order ID:</Typography>
-                </TableCell>
-                <TableCell>{cleanedData?.cleaned_order_id || 'N/A'}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell variant="head">
-                  <Typography variant="h6">Cleaned Data:</Typography>
-                </TableCell>
-                <TableCell
-                  sx={{
-                    wordBreak: 'break-word',
-                    maxWidth: '40vw',
-                    overflowY: 'auto',
-                    whiteSpace: 'pre-wrap',
-                    height: '60vh',
-                  }}
-                >
-                  {cleanedData?.cleaned_data || 'No data available.'}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+          {/* Display the Cleaned Data */}
+          <Box sx={{ mt: 4 }}>
+            <Typography variant="h6" gutterBottom>
+              Order ID: {cleanedData?.cleaned_order_id || 'N/A'}
+            </Typography>
+            <Typography variant='h3' paddingTop={3}>
+              Cleaned Data:
+            </Typography>
+            <Box
+              sx={{
+                maxHeight: '70vh',
+                overflowY: 'auto',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                p: 2,
+                backgroundColor: '#2e2e2e',
+              }}
+            >
+              {cleanedData?.cleaned_data ? (
+                <ReactJsonPretty data={cleanedData.cleaned_data} />
+              ) : (
+                <Typography>No data available.</Typography>
+              )}
+            </Box>
+          </Box>
         </Paper>
       </Container>
     </Box>

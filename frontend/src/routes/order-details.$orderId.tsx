@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
-import { Box, Button, Container, Paper, Typography, CircularProgress } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Paper,
+  Typography,
+  CircularProgress,
+} from '@mui/material';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import ReactJsonPretty from 'react-json-pretty';
+import 'react-json-pretty/themes/monikai.css';
 
 // Function to fetch order details from the API
 const fetchOrderDetails = async (orderId: string, token: string) => {
-  const response = await axios.get(`http://127.0.0.1:8000/api/order-details/${orderId}/`, {  
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await axios.get(
+    `http://127.0.0.1:8000/api/order-details/${orderId}/`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return response.data;
 };
 
@@ -25,13 +37,17 @@ const OrderDetails: React.FC = () => {
     // Retrieve order ID from local storage
     const storedOrderId = localStorage.getItem('selectedOrderId');
     setOrderId(storedOrderId);
-    
+
     // Fetch order details if orderId is present
     const fetchOrderDetailsData = async () => {
       if (storedOrderId && isLoggedIn) {
         const token = localStorage.getItem('accessToken');
         try {
           const details = await fetchOrderDetails(storedOrderId, token as string);
+          // Parse raw_data if it's a string
+          // if (details.raw_data && typeof details.raw_data === 'string') {
+          //   details.raw_data = JSON.parse(details.raw_data);
+          // }
           setOrderDetails(details);
         } catch (err) {
           console.error(err); // Log the error for debugging
@@ -59,7 +75,9 @@ const OrderDetails: React.FC = () => {
   if (error) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-        <Typography variant="h6" color="error">{error}</Typography>
+        <Typography variant="h6" color="error">
+          {error}
+        </Typography>
       </Box>
     );
   }
@@ -75,10 +93,27 @@ const OrderDetails: React.FC = () => {
   // Define a local variable for orderId
   const currentOrderId = orderDetails.order_id;
 
+  // Extract the screenshot URL if it exists
+  const screenshotUrl = orderDetails.raw_data?.info?.screenshot;
+
   return (
-    <Box display="flex" alignItems="center" justifyContent="center" minHeight="100vh" bgcolor="grey.100">
-      <Container maxWidth="sm">
-        <Paper elevation={3} sx={{ p: 5, textAlign: 'center', overflowY: 'auto', maxHeight: '80vh' }}>
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      minHeight="100vh"
+      bgcolor="grey.100"
+    >
+      <Container maxWidth="md">
+        <Paper
+          elevation={3}
+          sx={{
+            p: 5,
+            textAlign: 'center',
+            overflowY: 'auto',
+            maxHeight: '80vh',
+          }}
+        >
           <Button
             variant="contained"
             color="info"
@@ -104,15 +139,39 @@ const OrderDetails: React.FC = () => {
             <strong>Retry Count:</strong> {orderDetails.retry_num}
           </Typography>
           <Typography variant="body1" component="div" sx={{ mb: 2 }}>
-            <strong>Created At:</strong> {new Date(orderDetails.created_at).toLocaleString()}
+            <strong>Created At:</strong>{' '}
+            {new Date(orderDetails.created_at).toLocaleString()}
           </Typography>
+
+          {/* Display Screenshot Image if available */}
+          {screenshotUrl && (
+            <Box sx={{ mt: 4 }}>
+              <Typography variant="h6" component="div" sx={{ mb: 2 }}>
+                Screenshot:
+              </Typography>
+              <Box
+                sx={{
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  p: 1,
+                  backgroundColor: '#f9f9f9',
+                }}
+              >
+                <img
+                  src={screenshotUrl}
+                  alt="Screenshot"
+                  style={{ width: '100%', maxHeight: '400px', objectFit: 'contain' }}
+                />
+              </Box>
+            </Box>
+          )}
 
           {/* Download Raw Data Button */}
           <Button
             variant="contained"
             color="primary"
             fullWidth
-            sx={{ mb: 2, backgroundColor: '#3498db' }}
+            sx={{ mt: 4, mb: 2, backgroundColor: '#3498db' }}
             onClick={() => {
               const dataStr = JSON.stringify(orderDetails.raw_data || {}, null, 2);
               const blob = new Blob([dataStr], { type: 'application/json' });
@@ -137,7 +196,7 @@ const OrderDetails: React.FC = () => {
               // Store current orderId in a local variable
               const cleanedOrderId = currentOrderId;
               console.log('Navigating to cleaned data for order:', cleanedOrderId);
-              
+
               // Navigate to the cleaned data page
               window.location.href = `/cleaned-data/${cleanedOrderId}`;
             }}
@@ -145,13 +204,24 @@ const OrderDetails: React.FC = () => {
             View Cleaned Data
           </Button>
 
-          {/* Display Raw Data */}
-          <Typography variant="body1" component="div" sx={{ mb: 2 }}>
-            <strong>Raw Data:</strong>
-            <Box sx={{ whiteSpace: 'pre-wrap', overflowX: 'auto', border: '1px solid #ccc', borderRadius: '4px', p: 1 }}>
-              {JSON.stringify(orderDetails.raw_data, null, 2)}
+          {/* Display Raw Data using ReactJsonPretty */}
+          <Box sx={{ mt: 4, textAlign: 'left' }}>
+            <Typography variant="h6" component="div" sx={{ mb: 2 }}>
+              Raw Data:
+            </Typography>
+            <Box
+              sx={{
+                maxHeight: '50vh',
+                overflowY: 'auto',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                p: 1,
+                backgroundColor: '#2e2e2e',
+              }}
+            >
+              <ReactJsonPretty data={orderDetails.raw_data} />
             </Box>
-          </Typography>
+          </Box>
         </Paper>
       </Container>
     </Box>
