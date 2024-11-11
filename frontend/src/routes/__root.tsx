@@ -66,7 +66,7 @@ function RootComponent() {
         <Outlet /> {/* This is where the nested routes will be rendered */}
       </Box>
 
-      <TanStackRouterDevtools position="bottom-right" />
+      {/* <TanStackRouterDevtools position="bottom-right" /> */}
     </Box>
   );
 }
