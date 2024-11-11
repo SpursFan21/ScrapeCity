@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
+import env from '../env';
+
 interface User {
   username: string;
   email?: string;
@@ -23,7 +25,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Verify token and set user data
   const verifyToken = async (token: string): Promise<{ valid: boolean; userData?: User }> => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/verify-token/', {}, {
+      const response = await axios.post(`${env.API_URL}/api/verify-token/`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return { valid: true, userData: response.data.decoded }; // Return user data along with validity

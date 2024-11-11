@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { createFileRoute } from '@tanstack/react-router';
-import axios from 'axios';
-import { useNavigate } from '@tanstack/react-router';
+import React, { useState } from 'react'
+import { createFileRoute } from '@tanstack/react-router'
+import axios from 'axios'
+import { useNavigate } from '@tanstack/react-router'
 import {
   Box,
   Container,
@@ -10,51 +10,64 @@ import {
   Button,
   Paper,
   Alert,
-} from '@mui/material';
+} from '@mui/material'
+import env from '../env'
 
 export const Route = createFileRoute('/contact')({
   component: Contact,
-});
+})
 
 function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     message: '',
-  });
+  })
 
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target
+    setFormData({ ...formData, [name]: value })
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/contact/', formData);
-      console.log(response.data);
-      navigate({ to: '/' });
+      const response = await axios.post(`${env.API_URL}/api/contact/`, formData)
+      console.log(response.data)
+      navigate({ to: '/' })
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        setError(error.response?.data.error || 'Submission failed.');
+        setError(error.response?.data.error || 'Submission failed.')
       } else {
-        setError('An unexpected error occurred.');
+        setError('An unexpected error occurred.')
       }
     }
-  };
+  }
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh" bgcolor="grey.100">
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      minHeight="100vh"
+      bgcolor="grey.100">
       <Container maxWidth="sm">
         <Paper elevation={3} sx={{ p: 4 }}>
           <Typography variant="h4" component="h2" mb={3}>
             Contact Us
           </Typography>
-          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
           <Box component="form" onSubmit={handleSubmit} noValidate>
             <TextField
               label="Name"
@@ -89,14 +102,19 @@ function Contact() {
               rows={4}
               margin="normal"
             />
-            <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ mt: 2 }}>
               Send Message
             </Button>
           </Box>
         </Paper>
       </Container>
     </Box>
-  );
+  )
 }
 
-export default Contact;
+export default Contact
