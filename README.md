@@ -1,97 +1,67 @@
-Scrape City
+# Scrape City
 
-Overview
-
+## Overview  
 Scrape City simplifies web scraping by providing users with an intuitive interface to request scraping services, manage orders, and obtain structured data outputs. The application prioritizes user-friendly data extraction, leveraging robust backend architecture and responsive frontend design.
 
-Core Features
+## Core Features  
 
-User Authentication and Account Management
+### User Authentication and Account Management  
+- JWT-based tokenized authentication for secure user sessions.  
+- Manage account information directly from the user dashboard.  
 
-JWT-based tokenized authentication for secure user sessions.
+### Scraping Order Creation and Payment  
+- Order web scraping services and complete payments via voucher system.  
+- Track and manage all orders seamlessly.  
 
-Manage account information directly from the user dashboard.
+### Data Output Options  
+- Access both raw and cleaned data outputs post-scraping.  
+- Download data for external analysis or integration.  
 
-Scraping Order Creation and Payment
+### Third-Party Integration with ScrapeNinja  
+- Efficient scraping handled via ScrapeNinja API.  
+- Internal focus remains on user management and data processing.  
 
-Order web scraping services and complete payments via voucher system.
+### Voucher-Based Payment Integration  
+- Simple and secure payment solution with easy voucher redemption.  
 
-Track and manage all orders seamlessly.
+## Technologies Used  
 
-Data Output Options
+### Backend  
+- **Python**: Core language for business logic and APIs.  
+- **Django**: Robust web framework with built-in ORM, admin interface, and security.  
+- **Django REST Framework (DRF)**: For creating RESTful APIs with authentication and serialization.  
+- **BeautifulSoup4**: For HTML/XML data parsing and cleaning.  
+- **ScrapeNinja API**: Scalable web scraping solution.  
 
-Access both raw and cleaned data outputs post-scraping.
+### Frontend  
+- **React.js with TypeScript**: Dynamic and type-safe UI development.  
+- **Material-UI (MUI)**: Consistent, responsive design with customizable theming.  
+- **Axios**: Handles HTTP requests between React frontend and Django backend.  
 
-Download data for external analysis or integration.
+### Data Storage  
+- **PostgreSQL**: Hosted on AWS RDS for relational data management.  
 
-Third-Party Integration with ScrapeNinja
+### Deployment  
+- **Frontend**: Deployed on Vercel.  
+- **Backend**: Deployed on AWS Elastic Beanstalk.  
+- **Database**: Managed with AWS RDS (PostgreSQL).  
 
-Efficient scraping handled via ScrapeNinja API.
+## Interaction Flow  
 
-Internal focus remains on user management and data processing.
+1. **User Interaction**: Users trigger frontend events via React UI.  
+2. **API Requests**: Axios sends HTTP requests to Django REST API.  
+3. **Data Processing**: Django handles requests, performs scraping via ScrapeNinja, and cleans data with BeautifulSoup4.  
+4. **UI Update**: React updates the UI with processed data in real time.  
 
-Voucher-Based Payment Integration
+## Getting Started  
 
-Simple and secure payment solution with easy voucher redemption.
+### Prerequisites  
 
-Technologies Used
+#### Frontend  
+- Node.js (v16+)  
+- npm or yarn  
 
-Backend:
-
-Python: Core language for business logic and APIs.
-
-Django: Robust web framework with built-in ORM, admin interface, and security.
-
-Django REST Framework (DRF): For creating RESTful APIs with authentication and serialization.
-
-BeautifulSoup4: For HTML/XML data parsing and cleaning.
-
-ScrapeNinja API: Scalable web scraping solution.
-
-Frontend:
-
-React.js with TypeScript: Dynamic and type-safe UI development.
-
-Material-UI (MUI): Consistent, responsive design with customizable theming.
-
-Axios: Handles HTTP requests between React frontend and Django backend.
-
-Data Storage:
-
-PostgreSQL: Hosted on AWS RDS for relational data management.
-
-Deployment:
-
-Frontend: Deployed on Vercel.
-
-Backend: Deployed on AWS Elastic Beanstalk.
-
-Database: Managed with AWS RDS (PostgreSQL).
-
-Interaction Flow
-
-User Interaction: Users trigger frontend events via React UI.
-
-API Requests: Axios sends HTTP requests to Django REST API.
-
-Data Processing: Django handles requests, performs scraping via ScrapeNinja, and cleans data with BeautifulSoup4.
-
-UI Update: React updates the UI with processed data in real time.
-
-Getting Started
-
-Prerequisites
-
-Frontend:
-
-Node.js (v16+)
-
-npm or yarn
-
-Backend:
-
-Python (v3.8+)
-
-Django (v4.x)
-
-PostgreSQL
+#### Backend  
+- Python (v3.8+)  
+- Django (v4.x)  
+- PostgreSQL  
